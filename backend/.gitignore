@@ -1,0 +1,29 @@
+# Node
+node_modules/
+dist/
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Build
+coverage/
+.cache/
+tmp/
+*.tsbuildinfo
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Editor configs
+.vscode/
+.idea/
+
+# Sequelize migration logs (si usas CLI)
+.sequelizerc
