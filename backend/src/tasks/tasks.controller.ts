@@ -1,0 +1,29 @@
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { TasksService } from './tasks.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { Task } from './entities/task.entity';
+
+@Controller('tasks')
+export class TasksController {
+  constructor(private readonly tasksService: TasksService) {}
+
+  @Post()
+  create(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.tasksService.create(createTaskDto);
+  }
+
+  @Get()
+  async findAll(
+    @Query('completed') completed?: string,
+    @Query('dueDate') dueDate?: string,
+    @Query('tags') tags?: string,
+  ): Promise<Task[]> {
+    const filter = {
+      completed: completed === undefined ? undefined : completed === 'true',
+      dueDate: dueDate ? new Date(dueDate) : undefined,
+      tags: tags ? tags.split(',') : undefined,
+    };
+
+    return await this.tasksService.findAllFiltered(filter);
+  }
+}
