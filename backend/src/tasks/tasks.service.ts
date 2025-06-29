@@ -68,6 +68,32 @@ export class TasksService {
   }
 
   /**
+   * Toggles the 'completed' status of a task by its ID.
+   *
+   * @param id - The unique identifier of the task to update.
+   * @returns A promise that resolves to the updated Task instance with its 'completed' status toggled.
+   * @throws Error if the task with the specified ID is not found.
+   */
+  async toggleStatus(id: number): Promise<Task> {
+    const task = await this.taskModel.findByPk(id);
+    if (!task) {
+      throw new Error(`Task with id ${id} not found`);
+    }
+
+    const currentValue = task.dataValues.completed ?? false;
+    const newValue = !currentValue;
+
+    task.set('completed', newValue);
+    await task.save();
+
+    const updatedTask = await this.taskModel.findByPk(id, {
+      include: [this.buildTagInclude()],
+    });
+
+    return updatedTask!;
+  }
+
+  /**
    * Retrieves tasks based on optional filters:
    * - completed: true or false
    * - dueDate: limits tasks to those with dueDate <= given date

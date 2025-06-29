@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Patch,
+  Param,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Task } from './entities/task.entity';
@@ -25,5 +33,10 @@ export class TasksController {
     };
 
     return await this.tasksService.findAllFiltered(filter);
+  }
+
+  @Patch('toggle/:id')
+  async toggleStatus(@Param('id') id: number): Promise<Task> {
+    return await this.tasksService.toggleStatus(id);
   }
 }

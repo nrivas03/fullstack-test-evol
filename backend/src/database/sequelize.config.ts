@@ -1,6 +1,8 @@
 import * as dotenv from 'dotenv';
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
-
+import { Task } from 'src/tasks/entities/task.entity';
+import { Tag } from 'src/tags/entities/tag.entity';
+import { TaskTags } from 'src/tags/entities/task-tags.entity';
 dotenv.config();
 
 export const sequelizeConfig: SequelizeModuleOptions = {
@@ -12,4 +14,5 @@ export const sequelizeConfig: SequelizeModuleOptions = {
   database: process.env.DB_NAME,
   autoLoadModels: true,
   synchronize: true,
+  models: [Task, Tag, TaskTags],
 };
