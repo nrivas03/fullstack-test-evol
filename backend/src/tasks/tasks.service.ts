@@ -153,4 +153,54 @@ export class TasksService {
           }),
     };
   }
+
+  /**
+   * Updates an existing task by ID.
+   * - Can also update tags if provided.
+   *
+   * @param id - Task ID to update
+   * @param updateTaskDto - DTO with fields to update
+   * @returns Updated task with tags
+   */
+  async update(
+    id: number,
+    updateTaskDto: Partial<CreateTaskDto>,
+  ): Promise<Task> {
+    const { tags, dueDate, ...taskData } = updateTaskDto;
+
+    const task = await this.taskModel.findByPk(id);
+    if (!task) {
+      throw new Error(`Task with id ${id} not found`);
+    }
+
+    await task.update({
+      ...taskData,
+      dueDate: dueDate ? new Date(dueDate) : undefined,
+    });
+
+    if (tags) {
+      const tagInstances = await this.tagsService.findOrCreateMany(tags);
+      await task.$set('tags', tagInstances);
+    }
+
+    const updatedTask = await this.taskModel.findByPk(id, {
+      include: [this.buildTagInclude()],
+    });
+
+    return updatedTask!;
+  }
+
+  /**
+   * Deletes a task by ID.
+   *
+   * @param id - Task ID to delete
+   * @returns void
+   */
+  async remove(id: number): Promise<void> {
+    const task = await this.taskModel.findByPk(id);
+    if (!task) {
+      throw new Error(`Task with id ${id} not found`);
+    }
+    await task.destroy();
+  }
 }

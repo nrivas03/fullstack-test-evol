@@ -6,6 +6,9 @@ import {
   Query,
   Patch,
   Param,
+  Put,
+  Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -40,7 +43,20 @@ export class TasksController {
   }
 
   @Patch('toggle/:id')
-  async toggleStatus(@Param('id') id: number): Promise<Task> {
+  async toggleStatus(@Param('id', ParseIntPipe) id: number): Promise<Task> {
     return await this.tasksService.toggleStatus(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTaskDto: Partial<CreateTaskDto>,
+  ): Promise<Task> {
+    return await this.tasksService.update(id, updateTaskDto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return await this.tasksService.remove(id);
   }
 }
