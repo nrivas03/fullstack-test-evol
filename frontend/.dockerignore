@@ -1,0 +1,23 @@
+# .dockerignore para Frontend
+node_modules
+.git
+.gitignore
+README.md
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.vscode
+.idea
+*.log
+.DS_Store
+Thumbs.db
+dist
+coverage
+.nyc_output
+src/**/*.test.ts
+src/**/*.test.tsx
+src/**/*.spec.ts
+src/**/*.spec.tsx
+public/mockServiceWorker.js
