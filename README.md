@@ -12,8 +12,8 @@ Una aplicación web fullstack de gestión de tareas desarrollada con React + Nes
 
 1. **Clonar el repositorio**
 ```bash
-git clone <repository-url>
-cd todo-app
+git clone https://github.com/nrivas03/fullstack-test-evol.git
+cd fullstack-test-evol
 ```
 
 2. **Iniciar la aplicación completa**
