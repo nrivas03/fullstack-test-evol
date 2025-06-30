@@ -31,7 +31,7 @@ const TaskForm = () => {
   const validationSchema = Yup.object({
     title: Yup.string().required('El título es obligatorio'),
     description: Yup.string().required('La descripción es obligatoria'),
-    dueDate: Yup.string().required('La fecha es obligatoria'),
+    dueDate: Yup.string(),
   });
 
   const onSubmit = async (values: FormValues) => {
