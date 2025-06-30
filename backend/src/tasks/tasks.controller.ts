@@ -25,11 +25,15 @@ export class TasksController {
     @Query('completed') completed?: string,
     @Query('dueDate') dueDate?: string,
     @Query('tags') tags?: string,
+    @Query('sort') sort?: 'dueDate' | 'createdAt' | 'title',
+    @Query('title') title?: string,
   ): Promise<Task[]> {
     const filter = {
       completed: completed === undefined ? undefined : completed === 'true',
       dueDate: dueDate ? new Date(dueDate) : undefined,
       tags: tags ? tags.split(',') : undefined,
+      sort,
+      title,
     };
 
     return await this.tasksService.findAllFiltered(filter);

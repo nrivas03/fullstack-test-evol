@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { Tag } from 'src/tags/entities/tag.entity';
-import { Op } from 'sequelize';
+import { Op, Order, WhereOptions } from 'sequelize';
 import { TagsService } from 'src/tags/tags.service';
 
 /**
@@ -11,11 +11,15 @@ import { TagsService } from 'src/tags/tags.service';
  * - completed: true or false
  * - dueDate: filters tasks due on or before this date
  * - tags: filters tasks that are associated with these tag names
+ * - sort: field to sort tasks by (dueDate, createdAt, title)
+ * - title: optional search term to filter tasks by title
  */
 interface TaskFilter {
   completed?: boolean;
   dueDate?: Date;
   tags?: string[];
+  sort?: 'dueDate' | 'createdAt' | 'title';
+  title?: string;
 }
 
 @Injectable()
@@ -98,6 +102,8 @@ export class TasksService {
    * - completed: true or false
    * - dueDate: limits tasks to those with dueDate <= given date
    * - tags: filters tasks that include ALL specified tags
+   * - sort: field to sort tasks by (dueDate, createdAt, title)
+   * - title: optional search term to filter tasks by title
    *
    * If tags are provided, an INNER JOIN is used (required = true).
    * Otherwise, tags are included optionally.
@@ -106,18 +112,22 @@ export class TasksService {
    * @returns Promise<Task[]> - List of filtered tasks with tag info.
    */
   async findAllFiltered(filter: TaskFilter): Promise<Task[]> {
-    const { completed, dueDate, tags } = filter;
+    const { completed, dueDate, tags, sort, title } = filter;
 
-    const whereClause: Record<string, any> = {};
+    const whereClause: WhereOptions = {};
+
     if (completed !== undefined) whereClause.completed = completed;
     if (dueDate) whereClause.dueDate = { [Op.lte]: dueDate };
+    if (title) whereClause.title = { [Op.iLike]: `%${title}%` };
 
+    const order: Order = [];
+    if (sort) order.push([sort, 'ASC']);
     return this.taskModel.findAll({
       where: whereClause,
       include: [this.buildTagInclude(tags)],
+      order,
     });
   }
-
   /**
    * Helper function to construct Sequelize include configuration
    * for the many-to-many relation with tags.
