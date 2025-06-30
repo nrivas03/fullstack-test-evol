@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { Tag } from 'src/tags/entities/tag.entity';
+import { Tag } from '../tags/entities/tag.entity';
 import { Op, Order, WhereOptions } from 'sequelize';
-import { TagsService } from 'src/tags/tags.service';
+import { TagsService } from '../tags/tags.service';
 
 /**
  * Type for filtering tasks.

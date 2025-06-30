@@ -6,7 +6,7 @@ import {
   BelongsToMany,
 } from 'sequelize-typescript';
 import { Task } from '../../tasks/entities/task.entity';
-import { TaskTags } from 'src/tags/entities/task-tags.entity';
+import { TaskTags } from './task-tags.entity';
 
 @Table
 export class Tag extends Model<Tag> {
